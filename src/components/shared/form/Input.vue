@@ -35,7 +35,16 @@ const emit = defineEmits(['update:modelValue'])
 <template>
   <div class="input">
     <label v-if="label">{{ label }}</label>
-    <input :type="type" :placeholder="placeholder" :name="name" v-model="value" />
+    <input
+      :type="type"
+      :placeholder="placeholder"
+      :name="name"
+      v-model="value"
+      :class="error ? 'error' : ''"
+    />
+    <span class="error" v-if="error">
+      {{ error }}
+    </span>
   </div>
 </template>
 
@@ -57,5 +66,15 @@ const emit = defineEmits(['update:modelValue'])
   color: var(--grey);
   letter-spacing: 0.32px;
   padding-left: 16px;
+}
+span {
+  display: block;
+  margin-top: 10px;
+}
+.error {
+  color: var(--red);
+}
+input.error {
+  border-color: var(--red);
 }
 </style>
