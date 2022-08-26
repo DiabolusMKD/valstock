@@ -20,13 +20,22 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'text'
 })
 
+const value = computed<string | undefined>({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  },
+})
+
 const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
   <div class="input">
     <label v-if="label">{{ label }}</label>
-    <input :type="type" :placeholder="placeholder" :name="name" />
+    <input :type="type" :placeholder="placeholder" :name="name" v-model="value" />
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Layout from './shared/layout/Layout.vue'
 import Navigation from './shared/navigation/Navigation.vue'
-
+import Button from './shared/form/Button.vue'
 </script>
 
 <template>
@@ -12,6 +12,9 @@ import Navigation from './shared/navigation/Navigation.vue'
     <template #content>
       <h1>404</h1>
       <p>The page you are looking for could not be found...</p>
+      <router-link to="/dashboard">
+        <Button class="mt-40">Home</Button>
+      </router-link>
     </template>
   </Layout>
 </template>

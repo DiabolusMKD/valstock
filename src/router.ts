@@ -2,10 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from './components/Login.vue'
 import Dashboard from './components/Dashboard.vue'
 import NotFound from './components/NotFound.vue'
-import { ref } from 'vue'
-
-// TODO: get this from store
-const isAuthenticated = ref<boolean>(false)
+import { useLoginStore } from './stores/login'
 
 const routes = [
   { path: '/', name: 'Login', component: Login },
@@ -19,7 +16,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !isAuthenticated.value) next({ name: 'Login' })
+  const isAuthenticated = useLoginStore().isAuthenticated
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  else if(to.name === 'Login' && isAuthenticated) next({ name: 'Dashboard'})
   else next()
 })
 

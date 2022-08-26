@@ -1,4 +1,13 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
+interface Props {
+  showFooter?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  showFooter: false,
+})
 </script>
 
 <template>
@@ -13,7 +22,7 @@
     </div>
   </main>
   <footer>
-    <div class="footer">
+    <div v-if="showFooter" class="footer">
       <slot name="footer" />
     </div>
   </footer>
