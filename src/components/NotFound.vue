@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Layout from './shared/layout/Layout.vue'
-import Navigation from './shared/navigation/Navigation.vue'
-import Button from './shared/form/Button.vue'
+import Layout from '@/components/shared/layout/Layout.vue'
+import Navigation from '@/components/shared/navigation/Navigation.vue'
+import Button from '@/components/shared/form/Button.vue'
 </script>
 
 <template>

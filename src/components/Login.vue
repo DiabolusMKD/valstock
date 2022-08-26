@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Layout from './shared/layout/Layout.vue'
-import Navigation from './shared/navigation/Navigation.vue'
-import Input from './shared/form/Input.vue'
-import Button from './shared/form/Button.vue'
+import Layout from '@/components/shared/layout/Layout.vue'
+import Navigation from '@/components/shared/navigation/Navigation.vue'
+import Input from '@/components/shared/form/Input.vue'
+import Button from '@/components/shared/form/Button.vue'
 import footerImg from '/vector.svg'
-import { useLoginStore } from '../stores/login'
+import { useLoginStore } from '@/stores/login'
 import { useRouter } from 'vue-router'
 
 const username = ref<string>('')
