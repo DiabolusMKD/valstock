@@ -2,11 +2,19 @@
 import Layout from '@/components/shared/layout/Layout.vue'
 import Navigation from '@/components/shared/navigation/Navigation.vue'
 import Button from '@/components/shared/form/Button.vue';
+import Image from '@/components/shared/image-card/Image.vue'
 import { onBeforeMount } from 'vue'
 import { useImageStore } from '@/stores/image'
+import { useRouter } from 'vue-router'
 
+// Data properties
 const imageStore = useImageStore()
+const router = useRouter()
 
+// Methods
+const openDetails = (id: string) => router.push({ name: 'ImageDetails', params: { imageId: id } })
+
+// Lifecycle hooks
 onBeforeMount(async () => {
   imageStore.setInitialPage()
   await imageStore.loadImages()
@@ -19,9 +27,9 @@ onBeforeMount(async () => {
       <Navigation :dashboard="true"></Navigation>
     </template>
     <template #content>
-      <div class="container mt-40">
+      <div class="dashboard-container mt-40">
         <span class="item" v-for="image in imageStore.images" :key="image.id">
-          <img :src="image.modified_img_url" />
+          <Image :image="image" @image-click="openDetails"></Image>
         </span>
       </div>
       <Button class="mt-40" @click="imageStore.loadImages()">Load More</Button>
@@ -30,7 +38,7 @@ onBeforeMount(async () => {
 </template>
 
 <style>
-.container {
+.dashboard-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
   grid-gap: 10px;
@@ -45,10 +53,6 @@ onBeforeMount(async () => {
   font-weight: bold;
   color: white;
   margin: 10px;
-}
-img {
-  width: 100%;
-  cursor: pointer;
 }
 .item:nth-child(2n+5):nth-child(2n+2) img {
   margin-top: -300px;

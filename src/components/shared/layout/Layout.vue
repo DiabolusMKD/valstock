@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 .footer {
   height: 250px;
