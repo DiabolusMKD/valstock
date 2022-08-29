@@ -4,7 +4,7 @@ import Navigation from '@/components/shared/navigation/Navigation.vue'
 import Button from '@/components/shared/form/Button.vue';
 import Image from '@/components/shared/image-card/Image.vue'
 import Modal from '@/components/shared/modal/Modal.vue'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import { useImageStore } from '@/stores/image'
 import { useRouter } from 'vue-router'
 
@@ -12,11 +12,21 @@ import { useRouter } from 'vue-router'
 const imageStore = useImageStore()
 const router = useRouter()
 const openModal = ref<boolean>(false)
+const selectedImageId = ref<string>('')
+
+// Computed properties
+const images = computed(() => imageStore.images)
 
 // Methods
 const openDetails = (id: string) => router.push({ name: 'ImageDetails', params: { imageId: id } })
-const openAlbumModal = () => openModal.value = true
-const closeAlbumModal = () => openModal.value = false
+const openAlbumModal = (id: string) => {
+  openModal.value = true
+  selectedImageId.value = id
+}
+const closeAlbumModal = () => {
+  openModal.value = false
+  selectedImageId.value = ''
+}
 
 // Lifecycle hooks
 onBeforeMount(async () => {
@@ -32,7 +42,7 @@ onBeforeMount(async () => {
     </template>
     <template #content>
       <div class="dashboard-container mt-40">
-        <span class="item" v-for="image in imageStore.images" :key="image.id">
+        <span class="item" v-for="image in images" :key="image.id">
           <Image
             :image="image"
             @image-click="openDetails"
@@ -40,14 +50,14 @@ onBeforeMount(async () => {
             @close-modal="closeAlbumModal"
             class="galery-image"
           ></Image>
-          <Modal
-            v-if="openModal"
-            :id="image?.id"
-            @close-modal="closeAlbumModal"
-          ></Modal>
         </span>
       </div>
       <Button class="mt-40" @click="imageStore.loadImages()">Load More</Button>
+      <Modal
+        v-if="openModal"
+        :id="selectedImageId"
+        @close-modal="closeAlbumModal"
+      ></Modal>
     </template>
   </Layout>
 </template>

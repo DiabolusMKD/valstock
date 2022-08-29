@@ -6,4 +6,11 @@ export type Image = {
   url: string
   download_url: string
   modified_img_url: string
+  albums: number[] | []
+}
+
+export type Album = {
+  id: number
+  name: string
+  active: boolean
 }

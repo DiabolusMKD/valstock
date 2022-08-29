@@ -5,6 +5,8 @@ import checkmark from '/checkmark.svg'
 import checkmarkSave from '/checkmark-save.svg'
 import { getRandomInteger } from '@/util/getRandomInteger'
 import { computed, ref } from 'vue'
+import { Album } from '@/types/common'
+import { useImageStore } from '@/stores/image'
 
 type AlbumAction = 'new' | 'existing'
 
@@ -25,10 +27,14 @@ const props = withDefaults(defineProps<Props>(), {
 // Data properties
 const albumAction = ref<AlbumAction>('new')
 const albumName = ref<string>('')
-const albums = ref([{ id: 1, name: 'Album 1', active: true}, { id: 2, name: 'Album 2', active: false }, { id: 3, name: 'Album 3', active: true}])
+const imageStore = useImageStore()
+const albums = computed<Album[]>(() => imageStore.getAlbums)
+const activeImage = computed(() => imageStore.$state.images.find(image => image.id == props.id))
+
+albums.value.map(album => album.active = activeImage.value?.albums.includes(album.id) as boolean)
 
 // Methods
-const closeModal = (openModal: false) => emit('close-modal', false)
+const closeModal = () => emit('close-modal', false)
 const changeActiveLabel = (activeAlbumLabel: AlbumAction) => albumAction.value = activeAlbumLabel
 const toggleExistingAlbum = (id: number) => {
   albums.value.map(album => {
@@ -36,18 +42,23 @@ const toggleExistingAlbum = (id: number) => {
   })
 }
 const createAlbum = () => {
-  albums.value.push({
+  const newAlbum: Album = {
     id: getRandomInteger(1, 1000),
     name: albumName.value,
     active: true,
-  })
+  } 
+  albums.value.push(newAlbum)
   albumName.value = ''
+}
+const save = () => {
+  if(props.id) imageStore.saveAlbum(props.id, albums.value.filter(album => album.active == true))
+  closeModal()
 }
 </script>
   
 <template>
   <div class="modal">
-    <div class="modal-header" :class="albumAction === 'new' ? 'new' : 'existing'">
+    <div class="modal-header" :class="(albumAction === 'new' || albums.length) ? 'new' : 'existing'">
       <span
         @click="changeActiveLabel('new')"
         :class="albumAction === 'new' ? 'active' : ''"
@@ -89,7 +100,7 @@ const createAlbum = () => {
     </div>
     <div class="modal-footer">
       <Button variant="light" @click="closeModal">Cancel</Button>
-      <Button variant="dark">Save</Button>
+      <Button variant="dark" @click="save">Save</Button>
     </div>
   </div>
 </template>

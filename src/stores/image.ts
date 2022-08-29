@@ -1,5 +1,5 @@
 import { defineStore, Store } from 'pinia'
-import { Image } from '@/types/common';
+import { Image, Album } from '@/types/common'
 
 type ImageStoreState = {
   images: Image[]
@@ -10,6 +10,7 @@ type ImageStoreState = {
   selectedImage: Image | null
   imageWidth: number
   imageHeight: number
+  albums: Album[] | []
   api: Api
 }
 
@@ -34,6 +35,7 @@ export const useImageStore = defineStore('image', {
       selectedImage: null,
       imageWidth: 400,
       imageHeight: 500,
+      albums: [],
       api: {
         url: 'https://picsum.photos',
         headers: {
@@ -45,6 +47,7 @@ export const useImageStore = defineStore('image', {
   getters: {
     getImageWidth: (state) => state.imageWidth,
     getImageHeight: (state) => state.imageHeight,
+    getAlbums: (state) => state.albums,
   },
   actions: {
     async loadImages() {
@@ -57,6 +60,7 @@ export const useImageStore = defineStore('image', {
         .then((returnedResponse) => {
           returnedResponse.map((image: Image) => {
             image.modified_img_url = modifyImageUrl(image, this.imageWidth, this.imageHeight)
+            image.albums = []
           })
           this.images?.push(...returnedResponse)
           this.page++
@@ -91,7 +95,14 @@ export const useImageStore = defineStore('image', {
     },
     setInitialPage() {
       this.page = 1
-    }
+    },
+    saveAlbum(id: string, albums: Album[]) {
+      this.images.find(image => {
+        if(image.id === id) {
+          image.albums = albums.map(album => album.id)
+        }
+      })
+    },
   }
 })
 

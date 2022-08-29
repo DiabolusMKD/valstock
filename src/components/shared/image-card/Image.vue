@@ -9,7 +9,7 @@ type ImageCardType = 'galery' | 'album' | 'details'
 // Emits
 const emit = defineEmits<{
   (e: 'image-click', id: string): void
-  (e: 'open-modal'): void
+  (e: 'open-modal', id: string): void
 }>()
 
 // Props
@@ -31,8 +31,8 @@ const width = computed(() => props.type === 'details' ? imageStore.getImageWidth
 const height = computed(() => props.type === 'details' ? imageStore.getImageHeight + 100 : imageStore.getImageHeight)
 
 // Methods
-const openModal = (): void => emit('open-modal') 
-const openImage = (id: string) => emit('image-click', id)
+const openModal = (id: string): void => emit('open-modal', id)
+const openImage = (id: string): void => emit('image-click', id)
 </script>
   
 <template>
@@ -49,7 +49,7 @@ const openImage = (id: string) => emit('image-click', id)
       v-if="props.type !== 'details'"
       variant="dark-2"
       :wide="true"
-      @click="openModal"
+      @click="image ? openModal(image.id) : false"
     >
     {{ buttonText }}
     </Button>
