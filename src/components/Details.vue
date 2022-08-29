@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Layout from '@/components/shared/layout/Layout.vue'
 import Navigation from '@/components/shared/navigation/Navigation.vue'
-import Button from '@/components/shared/form/Button.vue';
+import Button from '@/components/shared/form/Button.vue'
 import Image from '@/components/shared/image-card/Image.vue'
+import Modal from '@/components/shared/modal/Modal.vue'
 import { onBeforeMount, computed, ref } from 'vue'
 import { useImageStore } from '@/stores/image'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 
 // Data properties
 const imageStore = useImageStore()
@@ -17,16 +18,19 @@ const dateNow = date.value.toLocaleString('en-GB', {
   month: 'long',
   year: 'numeric',
 })
+const openModal = ref<boolean>(false)
 
 // Computed properties
 const image = computed(() => imageStore.selectedImage)
 
 // Methods
 const goBack = () => router.push({ name: 'Dashboard'})
+const openAlbumModal = () => openModal.value = true
+const closeAlbumModal = () => openModal.value = false
 
 // Lifecycle hook
 onBeforeMount(async () => {
-  await imageStore.fetchImage(route.params.imageId as any)
+  await imageStore.fetchImage(route.params.imageId as string)
   imageStore.setInitialPage()
 })
 </script>
@@ -39,11 +43,16 @@ onBeforeMount(async () => {
     <template #content>
       <div class="container">
         <div class="details-top-buttons">
-          <Button variant="light">Add to album +</Button>
+          <Button variant="light" @click="openAlbumModal">Add to album +</Button>
           <Button variant="dark-2">Download</Button>
         </div>
         <div class="details-image">
-          <Image :image="image" type="details"></Image>
+          <Image
+            :image="image"
+            type="details"
+            @open-modal="openAlbumModal"
+            @close-modal="closeAlbumModal"
+          ></Image>
         </div>
         <div class="details">
           <div class="uploaded-by">
@@ -57,6 +66,11 @@ onBeforeMount(async () => {
           </div>
         </div>
         <Button class="back-btn" variant="light" @click="goBack">Go back</Button>
+        <Modal
+          v-if="openModal"
+          :id="image?.id"
+          @close-modal="closeAlbumModal"
+        ></Modal>
       </div>
     </template>
   </Layout>
