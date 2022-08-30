@@ -16,9 +16,9 @@ export const useNotificationStore = defineStore('notification', {
       showNotification: false
     }) as NotificationState,
   getters: {
-    isShownNotification: (state) => state.showNotification,
-    getNotificationMessage: (state) => state.message,
-    getNotificationtype: (state) => state.type
+    isShownNotification: (state: NotificationState) => state.showNotification,
+    getNotificationMessage: (state: NotificationState) => state.message,
+    getNotificationtype: (state: NotificationState) => state.type
   },
   actions: {
     notify(type: NotificationType, message: string) {

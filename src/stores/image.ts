@@ -45,9 +45,9 @@ export const useImageStore = defineStore('image', {
       }
     }) as ImageStoreState,
   getters: {
-    getImageWidth: (state) => state.imageWidth,
-    getImageHeight: (state) => state.imageHeight,
-    getAlbums: (state) => state.albums,
+    getImageWidth: (state: ImageStoreState) => state.imageWidth,
+    getImageHeight: (state: ImageStoreState) => state.imageHeight,
+    getAlbums: (state: ImageStoreState) => state.albums,
   },
   actions: {
     async loadImages() {

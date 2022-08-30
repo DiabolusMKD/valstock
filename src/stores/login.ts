@@ -17,10 +17,10 @@ export const useLoginStore = defineStore('login', {
       isLoggingIn: false,
     }) as LoginStoreState,
   getters: {
-    user(state): string | null {
+    user(state: LoginStoreState): string | null {
       return state.loginResult?.username || null
     },
-    isAuthenticated(state): boolean {
+    isAuthenticated(state: LoginStoreState): boolean {
       const loggedUserSessionString = sessionStorage.getItem('loggedUser')
       const loggedUser = loggedUserSessionString? JSON.parse(loggedUserSessionString) : null
       const { username, password } = loggedUser || {}

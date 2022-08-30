@@ -12,8 +12,7 @@ import { useRouter } from 'vue-router'
 
 // Data properties
 const { imageStore } = imageHook()
-const { 
-  notificationStore,
+const {
   isShownNotification,
   notificationType,
   notificationMessage,
