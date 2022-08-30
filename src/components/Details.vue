@@ -4,12 +4,20 @@ import Navigation from '@/components/shared/navigation/Navigation.vue'
 import Button from '@/components/shared/form/Button.vue'
 import Image from '@/components/shared/image-card/Image.vue'
 import Modal from '@/components/shared/modal/Modal.vue'
+import NotificationMessage from '@/components/shared/notification/NotificationMessage.vue'
 import { onBeforeMount, computed, ref } from 'vue'
-import { useImageStore } from '@/stores/image'
+import imageHook from '@/hooks/image'
+import notificationHook from '@/hooks/notification'
 import { useRoute, useRouter } from 'vue-router'
 
 // Data properties
-const imageStore = useImageStore()
+const { imageStore } = imageHook()
+const { 
+  notificationStore,
+  isShownNotification,
+  notificationType,
+  notificationMessage,
+} = notificationHook()
 const route = useRoute()
 const router = useRouter()
 const date = ref(new Date())
@@ -71,6 +79,12 @@ onBeforeMount(async () => {
           :id="image?.id"
           @close-modal="closeAlbumModal"
         ></Modal>
+        <NotificationMessage
+          v-if="isShownNotification"
+          :type="notificationType"
+        >
+          {{ notificationMessage }}
+        </NotificationMessage>
       </div>
     </template>
   </Layout>

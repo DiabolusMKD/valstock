@@ -1,15 +1,23 @@
 <script setup lang="ts">
 import Layout from '@/components/shared/layout/Layout.vue'
 import Navigation from '@/components/shared/navigation/Navigation.vue'
-import Button from '@/components/shared/form/Button.vue';
+import Button from '@/components/shared/form/Button.vue'
 import Image from '@/components/shared/image-card/Image.vue'
 import Modal from '@/components/shared/modal/Modal.vue'
+import NotificationMessage from '@/components/shared/notification/NotificationMessage.vue'
 import { onBeforeMount, ref, computed } from 'vue'
-import { useImageStore } from '@/stores/image'
+import imageHook from '@/hooks/image'
+import notificationHook from '@/hooks/notification'
 import { useRouter } from 'vue-router'
 
 // Data properties
-const imageStore = useImageStore()
+const { imageStore } = imageHook()
+const { 
+  notificationStore,
+  isShownNotification,
+  notificationType,
+  notificationMessage,
+} = notificationHook()
 const router = useRouter()
 const openModal = ref<boolean>(false)
 const selectedImageId = ref<string>('')
@@ -58,6 +66,12 @@ onBeforeMount(async () => {
         :id="selectedImageId"
         @close-modal="closeAlbumModal"
       ></Modal>
+      <NotificationMessage
+        v-if="isShownNotification"
+        :type="notificationType"
+      >
+        {{ notificationMessage }}
+      </NotificationMessage>
     </template>
   </Layout>
 </template>

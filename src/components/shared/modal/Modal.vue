@@ -7,6 +7,7 @@ import { getRandomInteger } from '@/util/getRandomInteger'
 import { computed, ref } from 'vue'
 import { Album } from '@/types/common'
 import { useImageStore } from '@/stores/image'
+import notificationHook from '@/hooks/notification'
 
 type AlbumAction = 'new' | 'existing'
 
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 const albumAction = ref<AlbumAction>('new')
 const albumName = ref<string>('')
 const imageStore = useImageStore()
+const { notificationStore } = notificationHook()
 const albums = computed<Album[]>(() => imageStore.getAlbums)
 const activeImage = computed(() => imageStore.$state.images.find(image => image.id == props.id))
 
@@ -51,14 +53,19 @@ const createAlbum = () => {
   albumName.value = ''
 }
 const save = () => {
-  if(props.id) imageStore.saveAlbum(props.id, albums.value.filter(album => album.active == true))
+  if(props.id) {
+    imageStore.saveAlbum(props.id, albums.value.filter(album => album.active == true))
+    notificationStore.notify('success', 'Successfully added image to the selected album(s)')
+  } else {
+    notificationStore.notify('error', 'Something went wrong')
+  }
   closeModal()
 }
 </script>
   
 <template>
   <div class="modal">
-    <div class="modal-header" :class="(albumAction === 'new' || albums.length) ? 'new' : 'existing'">
+    <div class="modal-header" :class="(albumAction === 'new' || albums.length <= 1) ? 'new' : 'existing'">
       <span
         @click="changeActiveLabel('new')"
         :class="albumAction === 'new' ? 'active' : ''"
@@ -79,6 +86,8 @@ const save = () => {
           v-if="albumName.length"
           :src="checkmarkSave"
           class="checkmark-save"
+          alt="checkmark_save_icon"
+          title="Save"
           @click="createAlbum"
         />
       </div>
@@ -91,7 +100,12 @@ const save = () => {
             @click="toggleExistingAlbum(album.id)"
           >
           <span v-if="album.active">
-            <img :src="checkmark" class="checkmark-icon" />
+            <img
+              :src="checkmark"
+              class="checkmark-icon"
+              alt="active_icon"
+              title="Active Album"
+            />
           </span> {{ album.name }}
           </li>
         </ul>
@@ -112,7 +126,7 @@ const save = () => {
   border: 4px solid var(--black);
   background: var(--white) 0% 0% no-repeat padding-box;
   box-shadow: 0px 5px 20px #00000029;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
