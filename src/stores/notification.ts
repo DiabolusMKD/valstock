@@ -1,4 +1,4 @@
-import { defineStore, Store } from 'pinia'
+import { defineStore } from 'pinia'
 
 type NotificationState = {
   type: NotificationType,

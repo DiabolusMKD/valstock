@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
   else next()
 })
 
-router.afterEach((to, _from) => {
+router.afterEach((to) => {
   if (to.meta.title) {
     document.title = `${to.meta.title} - Valstock`
   }

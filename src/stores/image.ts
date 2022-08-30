@@ -1,4 +1,4 @@
-import { defineStore, Store } from 'pinia'
+import { defineStore } from 'pinia'
 import { Image, Album } from '@/types/common'
 
 type ImageStoreState = {
