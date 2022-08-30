@@ -50,7 +50,7 @@ export const useImageStore = defineStore('image', {
     getAlbums: (state: ImageStoreState) => state.albums,
   },
   actions: {
-    async loadImages() {
+    async loadImages(this: ImageStoreState) {
       this.isFetching = true
       await fetch(`${this.api.url}/v2/list?page=${this.page}&limit=${this.limit}`, this.api.headers)
         .then((response) => {
@@ -71,7 +71,7 @@ export const useImageStore = defineStore('image', {
         })
       this.isFetching = false
     },
-    async fetchImage(id: string | null) {
+    async fetchImage(this: ImageStoreState, id: string | null) {
       this.isFetching = true
       const image = id ? this.images.find(img => img.id === id) : null
       if(image != null) {
@@ -93,10 +93,10 @@ export const useImageStore = defineStore('image', {
       }
       this.isFetching = false
     },
-    setInitialPage() {
+    setInitialPage(this: ImageStoreState) {
       this.page = 1
     },
-    saveAlbum(id: string, albums: Album[]) {
+    saveAlbum(this: ImageStoreState, id: string, albums: Album[]) {
       this.images.find(image => {
         if(image.id === id) {
           image.albums = albums.map(album => album.id)
