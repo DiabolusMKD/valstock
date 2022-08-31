@@ -4,12 +4,15 @@ import NotFound from '@/components/NotFound.vue'
 import { useLoginStore } from '@/stores/login'
 
 const routes = [
-  { 
+  {
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      title: 'Valstock - Login'
+    },
   },
-  { 
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('@/components/Dashboard.vue'),
@@ -25,8 +28,17 @@ const routes = [
       title: 'Image Details'
     }
   },
-  { path:
-    '/:pathMatch(.*)*',
+  {
+    path: '/album/:albumId',
+    name: 'Album',
+    component: () => import('@/components/Album.vue'),
+    meta: {
+      title: 'Album'
+    },
+  },
+  {
+    path:
+      '/:pathMatch(.*)*',
     name: 'NotFound',
     component: NotFound
   },
@@ -40,7 +52,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = useLoginStore().isAuthenticated
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  else if(to.name === 'Login' && isAuthenticated) next({ name: 'Dashboard'})
+  else if (to.name === 'Login' && isAuthenticated) next({ name: 'Dashboard' })
   else next()
 })
 

@@ -6,6 +6,7 @@ export default () => {
   const isShownNotification = computed(() => notificationStore.isShownNotification)
   const notificationMessage = computed(() => notificationStore.getNotificationMessage)
   const notificationType = computed(() => notificationStore.getNotificationtype)
+
   return {
     notificationStore,
     isShownNotification,

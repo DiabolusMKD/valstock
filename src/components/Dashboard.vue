@@ -53,9 +53,8 @@ onBeforeMount(async () => {
           <Image
             :image="image"
             @image-click="openDetails"
-            @open-modal="openAlbumModal"
+            @image-button="openAlbumModal"
             @close-modal="closeAlbumModal"
-            class="galery-image"
           ></Image>
         </span>
       </div>
@@ -77,25 +76,31 @@ onBeforeMount(async () => {
 
 <style>
 .dashboard-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-  grid-gap: 10px;
   width: 80%;
-  margin: 80px auto 40px;
+  margin: 80px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 30%);
+  grid-auto-flow: dense;
 }
 .item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3em;
-  font-weight: bold;
-  color: white;
-  margin: 10px;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  position: relative;
+  height: 500px;
 }
-.item:nth-child(2n+5):nth-child(2n+2) img {
-  margin-top: -300px;
+.item img {
+  display: block;
+  max-width: 100%;
+  height: 100%;
 }
-.item:nth-child(2n+2) img {
+.dashboard-container > .item:nth-child(2n+1) {
   height: 400px;
+}
+.dashboard-container > .item:nth-child(2n+4) {
+  margin-top: -50px;
+}
+.dashboard-container > .item:nth-child(4),
+.dashboard-container > .item:nth-child(6) {
+  margin-top: -100px;
 }
 </style>

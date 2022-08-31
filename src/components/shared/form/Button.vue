@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-type ButtonVariant = 'dark' | 'dark-2' | 'light'
+type ButtonVariant = 'dark' | 'dark-2' | 'dark-3' | 'light' | 'red'
 
 interface Props {
   variant?: ButtonVariant
@@ -16,7 +16,9 @@ const props = withDefaults(defineProps<Props>(), {
 const extraClasses = computed(() => ({
   'dark-btn': props.variant === 'dark',
   'dark2-btn': props.variant === 'dark-2',
+  'dark3-btn': props.variant === 'dark-3',
   'light-btn': props.variant === 'light',
+  'red-btn': props.variant === 'red',
   'wide-btn': props.wide === true,
 }))
 </script>
@@ -41,6 +43,11 @@ button {
   background-color: var(--black);
   color: var(--white);
 }
+.dark3-btn {
+  border: 2px solid var(--white);
+  background-color: var(--black);
+  color: var(--white);
+}
 .dark-btn:hover {
   background-color: var(--white);
   color: var(--black);
@@ -52,6 +59,11 @@ button {
 }
 .light-btn:hover {
   background-color: var(--black);
+  color: var(--white);
+}
+.red-btn {
+  border: 2px solid var(--red);
+  background-color: var(--red);
   color: var(--white);
 }
 .wide-btn {

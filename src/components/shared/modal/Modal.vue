@@ -6,8 +6,8 @@ import checkmarkSave from '/checkmark-save.svg'
 import { getRandomInteger } from '@/util/getRandomInteger'
 import { computed, ref } from 'vue'
 import { Album } from '@/types/common'
-import { useImageStore } from '@/stores/image'
 import notificationHook from '@/hooks/notification'
+import imageHook from '@/hooks/image';
 
 type AlbumAction = 'new' | 'existing'
 
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 // Data properties
 const albumAction = ref<AlbumAction>('new')
 const albumName = ref<string>('')
-const imageStore = useImageStore()
+const { imageStore } = imageHook()
 const { notificationStore } = notificationHook()
 const albums = computed<Album[]>(() => imageStore.getAlbums)
 const activeImage = computed(() => imageStore.$state.images.find(image => image.id == props.id))

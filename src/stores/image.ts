@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { Image, Album } from '@/types/common'
+import image from '@/hooks/image'
 
 type ImageStoreState = {
   images: Image[]
@@ -54,7 +55,7 @@ export const useImageStore = defineStore('image', {
       this.isFetching = true
       await fetch(`${this.api.url}/v2/list?page=${this.page}&limit=${this.limit}`, this.api.headers)
         .then((response) => {
-          if(response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the images!'
+          if (response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the images!'
           return response.json()
         })
         .then((returnedResponse) => {
@@ -74,22 +75,22 @@ export const useImageStore = defineStore('image', {
     async fetchImage(this: ImageStoreState, id: string | null) {
       this.isFetching = true
       const image = id ? this.images.find(img => img.id === id) : null
-      if(image != null) {
+      if (image != null) {
         this.selectedImage = image
       } else {
         await fetch(`${this.api.url}/id/${id}/info`, this.api.headers)
-        .then((response) => {
-          if(response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the image!'
-          return response.json()
-        })
-        .then((returnedResponse) => {
-          returnedResponse.modified_img_url = modifyImageUrl(returnedResponse, this.imageWidth, this.imageHeight)
-          this.selectedImage = returnedResponse
-        })
-        .catch((error) => {
-          console.error(error)
-          this.error = error
-        })
+          .then((response) => {
+            if (response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the image!'
+            return response.json()
+          })
+          .then((returnedResponse) => {
+            returnedResponse.modified_img_url = modifyImageUrl(returnedResponse, this.imageWidth, this.imageHeight)
+            this.selectedImage = returnedResponse
+          })
+          .catch((error) => {
+            console.error(error)
+            this.error = error
+          })
       }
       this.isFetching = false
     },
@@ -98,12 +99,22 @@ export const useImageStore = defineStore('image', {
     },
     saveAlbum(this: ImageStoreState, id: string, albums: Album[]) {
       this.images.find(image => {
-        if(image.id === id) {
+        if (image.id === id) {
           image.albums = albums.map(album => album.id)
         }
       })
     },
-  }
+    getAlbumImages(this: ImageStoreState, id: number): Image[] {
+      return this.images.filter((image: Image) => image.albums.includes(id))
+    },
+    removeImageFromAlbum(this: ImageStoreState, imageId: string, albumId: number): void {
+      this.images.map((image: Image) => {
+        if (image.id === imageId) {
+          image.albums = image.albums.filter(item => item !== albumId)
+        }
+      })
+    },
+  },
 })
 
 const modifyImageUrl = (image: Image, imageWidth: number, imageHeight: number): string => {

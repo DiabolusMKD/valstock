@@ -14,3 +14,5 @@ export type Album = {
   name: string
   active: boolean
 }
+
+export type NotificationType = 'success' | 'warning' | 'error'

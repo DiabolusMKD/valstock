@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
+import { NotificationType } from '@/types/common'
 
 type NotificationState = {
   type: NotificationType,
   message: string
   showNotification: boolean
 }
-
-type NotificationType = 'success' | 'warning' | 'error'
 
 export const useNotificationStore = defineStore('notification', {
   state: () =>

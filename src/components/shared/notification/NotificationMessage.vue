@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-type NotificationType = 'success' | 'warning' | 'error'
+import { NotificationType } from '@/types/common'
 
 // Props
 interface Props {
@@ -11,9 +9,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'success'
 })
-
-// Data properties
-// const imageStore = useImageStore()
 </script>
   
 <template>
