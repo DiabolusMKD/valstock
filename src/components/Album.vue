@@ -17,13 +17,21 @@ const {
   isShownNotification,
   notificationType,
   notificationMessage,
+  notificationStore,
 } = notificationHook()
 
 // Computed properties
 const albumImages = computed<ImageType[] | []>(() => imageStore.getAlbumImages(+route.params.albumId)) || []
 
 // Methods
-const removeImage = (id: string) => imageStore.removeImageFromAlbum(id, +route.params.albumId)
+const removeImage = (id: string) => {
+  if(id && route.params.albumId) {
+    imageStore.removeImageFromAlbum(id, +route.params.albumId)
+    notificationStore.notify('success', 'Successfully removed image from the album')
+  } else {
+    notificationStore.notify('error', 'Something went wrong')
+  }
+}
 </script>
 
 <template>
@@ -41,7 +49,7 @@ const removeImage = (id: string) => imageStore.removeImageFromAlbum(id, +route.p
           ></Image>
         </span>
       </div>
-      <div class="album-container mt-40" v-else>No Images</div>
+      <div class="album-container mt-40 no-images" v-else><p>No Images</p></div>
       <NotificationMessage
         v-if="isShownNotification"
         :type="notificationType"
@@ -70,6 +78,10 @@ const removeImage = (id: string) => imageStore.removeImageFromAlbum(id, +route.p
     display: block;
     max-width: 100%;
     height: 100%;
+  }
+  .no-images {
+    display: flex;
+    justify-content: center;
   }
 </style>
   

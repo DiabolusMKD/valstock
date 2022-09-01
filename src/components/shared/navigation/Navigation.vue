@@ -25,7 +25,10 @@ const showAlbumButton = computed<boolean>(() => !!props.dashboard && !!albums.va
 
 // Methods
 const toggleAlbumList = () => showAlbumList.value = !showAlbumList.value
-const goToAlbum = (id: string) => router.push({ name: 'Album', params: { albumId: id } })
+const goToAlbum = (id: string) => {
+  showAlbumList.value = false
+  router.push({ name: 'Album', params: { albumId: id } })
+}
 </script>
 
 <template>
