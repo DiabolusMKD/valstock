@@ -5,6 +5,7 @@ import Button from '@/components/shared/form/Button.vue'
 import Image from '@/components/shared/image-card/Image.vue'
 import Modal from '@/components/shared/modal/Modal.vue'
 import NotificationMessage from '@/components/shared/notification/NotificationMessage.vue'
+import LoadingSpinner from '@/components/shared/loader/LoadingSpinner.vue'
 import { onBeforeMount, ref, computed } from 'vue'
 import imageHook from '@/hooks/image'
 import notificationHook from '@/hooks/notification'
@@ -34,15 +35,21 @@ const closeAlbumModal = () => {
   openModal.value = false
   selectedImageId.value = ''
 }
+const loadMoreImages = async () => {
+  console.log('click')
+  imageStore.incrementPage()
+  await imageStore.loadImages()
+}
 
 // Lifecycle hooks
 onBeforeMount(async () => {
-  imageStore.setInitialPage()
+  imageStore.setPage()
   await imageStore.loadImages()
 })
 </script>
 
 <template>
+  <LoadingSpinner v-if="imageStore.isFetching"></LoadingSpinner>
   <Layout>
     <template #header>
       <Navigation :dashboard="true"></Navigation>
@@ -58,7 +65,7 @@ onBeforeMount(async () => {
           ></Image>
         </span>
       </div>
-      <Button class="mt-40" @click="imageStore.loadImages()">Load More</Button>
+      <Button class="mt-40" @click="loadMoreImages">Load More</Button>
       <Modal
         v-if="openModal"
         :id="selectedImageId"

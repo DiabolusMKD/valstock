@@ -53,23 +53,24 @@ export const useImageStore = defineStore('image', {
   actions: {
     async loadImages(this: ImageStoreState) {
       this.isFetching = true
-      await fetch(`${this.api.url}/v2/list?page=${this.page}&limit=${this.limit}`, this.api.headers)
-        .then((response) => {
-          if (response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the images!'
-          return response.json()
-        })
-        .then((returnedResponse) => {
-          returnedResponse.map((image: Image) => {
-            image.modified_img_url = modifyImageUrl(image, this.imageWidth, this.imageHeight)
-            image.albums = []
+      if(this.page * this.limit > this.images?.length) {
+        await fetch(`${this.api.url}/v2/list?page=${this.page}&limit=${this.limit}`, this.api.headers)
+          .then((response) => {
+            if (response.status >= 400 && response.status < 600) this.error = 'Server error occured while loading the images!'
+            return response.json()
           })
-          this.images?.push(...returnedResponse)
-          this.page++
-        })
-        .catch((error) => {
-          console.error(error)
-          this.error = error
-        })
+          .then((returnedResponse) => {
+            returnedResponse.map((image: Image) => {
+              image.modified_img_url = modifyImageUrl(image, this.imageWidth, this.imageHeight)
+              image.albums = []
+            })
+            this.images?.push(...returnedResponse)
+          })
+          .catch((error) => {
+            console.error(error)
+            this.error = error
+          })
+      }
       this.isFetching = false
     },
     async fetchImage(this: ImageStoreState, id: string | null) {
@@ -96,6 +97,12 @@ export const useImageStore = defineStore('image', {
     },
     setInitialPage(this: ImageStoreState) {
       this.page = 1
+    },
+    setPage(this: ImageStoreState) {
+      this.page = this.images?.length ? this.images.length / this.limit : 1 
+    },
+    incrementPage(this: ImageStoreState) {
+      this.page++
     },
     saveAlbum(this: ImageStoreState, id: string, albums: Album[]) {
       this.images.find(image => {

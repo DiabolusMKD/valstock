@@ -4,6 +4,7 @@ import Navigation from '@/components/shared/navigation/Navigation.vue'
 import Button from '@/components/shared/form/Button.vue'
 import Image from '@/components/shared/image-card/Image.vue'
 import NotificationMessage from '@/components/shared/notification/NotificationMessage.vue'
+import LoadingSpinner from '@/components/shared/loader/LoadingSpinner.vue'
 import { ref, computed } from 'vue'
 import imageHook from '@/hooks/image'
 import { useRoute, useRouter } from 'vue-router'
@@ -44,6 +45,7 @@ const goBack = () => router.push({ name: 'Dashboard'})
 </script>
 
 <template>
+  <LoadingSpinner v-if="imageStore.isFetching"></LoadingSpinner>
   <Layout>
     <template #header>
       <Navigation :dashboard="true"></Navigation>
