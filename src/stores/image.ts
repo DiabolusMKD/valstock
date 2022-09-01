@@ -107,6 +107,9 @@ export const useImageStore = defineStore('image', {
     getAlbumImages(this: ImageStoreState, id: number): Image[] {
       return this.images.filter((image: Image) => image.albums.includes(id))
     },
+    getAlbumInfo(this: ImageStoreState, id: number): Album {
+      return this.albums.find((album: Album) => album.id === id) || {} as Album
+    },
     removeImageFromAlbum(this: ImageStoreState, imageId: string, albumId: number): void {
       this.images.map((image: Image) => {
         if (image.id === imageId) {

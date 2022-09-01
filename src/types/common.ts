@@ -13,6 +13,7 @@ export type Album = {
   id: number
   name: string
   active: boolean
+  created: Date
 }
 
 export type NotificationType = 'success' | 'warning' | 'error'

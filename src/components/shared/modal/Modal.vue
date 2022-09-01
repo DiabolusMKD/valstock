@@ -48,6 +48,7 @@ const createAlbum = () => {
     id: getRandomInteger(1, 1000),
     name: albumName.value,
     active: true,
+    created: new Date()
   } 
   albums.value.push(newAlbum)
   albumName.value = ''
